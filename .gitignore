@@ -1,2 +1,16 @@
-node_modules/
+# Editor directories and files
+.idea
+.vs/
+.vscode/
 
+# dependencies
+/node_modules
+
+
+# Log files
+logs
+*.log
+
+# misc
+.DS_Store
+package-lock.json
