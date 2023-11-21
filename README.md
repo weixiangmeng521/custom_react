@@ -14,7 +14,7 @@ cssnano(),
 ```
 
 ``` shell
-cd /cygdrive/c/Users/厕所里吃泡面/Desktop/alg/react
+
 ```
 
 https://juejin.cn/post/6844904058394771470
