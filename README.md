@@ -15,20 +15,20 @@
 
 ## 下载依赖
 ```bash
-npm install i
+npm run i
 ```
 
 ## 运行模式
 * development
 开启liveserver，配置了sourcemap，方便更好学习
 ```bash
-npm install dev
+npm run dev
 ```
 
 * production
 混淆压缩代码，没有sourcemap
 ```bash
-npm install build
+npm run build
 ```
 
 ## 初体验
