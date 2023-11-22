@@ -28,6 +28,7 @@ let wipRoot:Fiber|null  = null
 let deletions:Fiber[]  = []
 // let hookIndex:number = 0;
 
+
 // create virual element
 function createElement(
     type:(string | (() => Fiber)), 
@@ -70,20 +71,29 @@ function createDom(vdom:Fiber) {
 
 // update dom
 function updateDom(dom:any, prevProps:FiberProps, nextProps:FiberProps) {
+    // Your logic to update DOM attributes, event listeners, etc.
+    // Remove old attributes
     const isEvent = (name:string) => name.startsWith("on");
     const isAttribute = (name:string) => !isEvent(name) && name != "children";
 
+    Object.keys(prevProps || {}).filter(isAttribute).forEach((name:string) => dom[name] = null);
+
+
+    // Add new attributes
+    Object.keys(nextProps || {}).filter(isAttribute).forEach((name:string) => dom[name] = nextProps[name]);
+
+    // Add or remove event listeners
+    Object.keys(nextProps || {}).filter(isEvent).forEach(name => {
+        const eventType = name.toLowerCase().substring(2);
+        dom.addEventListener(eventType, nextProps[name]);
+    })
+
+    // Add or remove event listeners
     Object.keys(prevProps).filter(isEvent).forEach((name:string) => {
         const eventType = name.toLowerCase().substring(2);
         dom.removeEventListener(eventType, prevProps[name] as EventListenerOrEventListenerObject);
     })
     
-    Object.keys(prevProps || {}).filter(isAttribute).forEach((name:string) => dom[name] = null);
-    Object.keys(nextProps || {}).filter(isAttribute).forEach((name:string) => dom[name] = nextProps[name]);
-    Object.keys(nextProps || {}).filter(isEvent).forEach(name => {
-        const eventType = name.toLowerCase().substring(2);
-        dom.addEventListener(eventType, nextProps[name]);
-    })
 }
 
 // commit root
@@ -94,6 +104,7 @@ function commitRoot() {
     wipRoot = null
 }
 
+// applying the changes to the actual DOM based on the effects specified
 function commitWork(fiber:Fiber|null|undefined) {
     if (!fiber) return
     
@@ -103,31 +114,23 @@ function commitWork(fiber:Fiber|null|undefined) {
     }
     const domParent = domParentFiber?.dom
 
-    if (
-        domParent &&
-        fiber.effectTag === "PLACEMENT" &&
-        fiber.dom != null
-    ) {
+    if (domParent && fiber.effectTag === "PLACEMENT" && fiber.dom != null) {
+        // If the fiber has the PLACEMENT effect, append the DOM node to its parent
         domParent.appendChild(fiber.dom)
 
-        // console.log(wipRoot);
-        // console.log(domParent);
-        
-    } else if (
-        domParent &&
-        fiber.effectTag === "UPDATE" &&
-        fiber.dom != null
+    }else if(
+        // If the fiber has the UPDATE effect, update the DOM node with new props
+        domParent && fiber.effectTag === "UPDATE" && fiber.dom != null
     ) {
         updateDom(
             fiber.dom,
             fiber?.alternate?.props || { children: [] },
             fiber.props
-        )
-    } else if (
-        domParent &&
-        fiber.effectTag === "DELECTION") 
-    {
-        commitDeletion(fiber, domParent)
+        );
+
+    // If the fiber has the DELETION effect, remove the DOM node from its parent    
+    } else if ( domParent && fiber.effectTag === "DELECTION") {
+        commitDeletion(fiber, domParent);
     }
 
 
@@ -135,37 +138,40 @@ function commitWork(fiber:Fiber|null|undefined) {
     commitWork(fiber.sibling)
 }
 
-
+// handling the deletion of a fiber and its associated DOM nodes.
 function commitDeletion(fiber:Fiber|undefined|null, domParent:HTMLElement | Text) {
     if(!fiber)return
     if (fiber.dom) {
+        // If the fiber has a DOM node, remove it from the parent
         domParent.removeChild(fiber.dom)
     } else {
+        // If the fiber doesn't have a DOM node, recursively commit deletion for its children
         commitDeletion(fiber.child, domParent)
     }
 }
 
-
+// It's responsible for advancing the unit of work (a fiber) and performing the necessary updates to the virtual DOM based on the fiber's type
 function performUnitOfWork(fiber:Fiber):Fiber | undefined {
-    const isFunctionComponent = fiber.type instanceof Function
+    // Perform different tasks based on the type of the fiber
+    const isFunctionComponent = typeof fiber.type === 'function';
     if(isFunctionComponent){
         updateFunctionComponent(fiber)
     } else {
         updateHostComponent(fiber)
     }
 
-    if(fiber.child)return fiber.child
+    // Return the next unit of work (fiber)
+    if(fiber.child) return fiber.child;
 
-    let nextFiber:Fiber|null|undefined = fiber;
+    // If no child, traverse the sibling or move up to the parent's sibling
+    let nextFiber:Fiber|undefined = fiber;
     while(nextFiber){
         if(nextFiber.sibling) return nextFiber.sibling
         nextFiber = nextFiber.parent
     }
-
-    debugger;
 }
 
-
+// Example function to update a function component
 function updateFunctionComponent(fiber:Fiber) {
     wipRoot = fiber 
     // hookIndex = 0;
@@ -177,56 +183,18 @@ function updateFunctionComponent(fiber:Fiber) {
 }
 
 
-function updateHostComponent(fiber:Fiber | null | undefined) {
-    if(!fiber)return
-    fiber.dom = createDom(fiber)
+// Example function to update a host component
+function updateHostComponent(fiber:Fiber) {
+    if (!fiber.dom) {
+        fiber.dom = createDom(fiber);
+    }
     reconcileChildren(fiber, fiber.props.children || [])
 }
 
 
 
 
-type SetStateAction<T> = T | ((prevState: T) => T);
-
-interface StateHook<T> {
-  state: T;
-  setState: (value: SetStateAction<T>) => void;
-}
-
-// A global array to store state values
-const globalState: any[] = [];
-let globalIndex = 0;
-
-function useState<T>(initialValue: T): StateHook<T> {
-    const currentIndex = globalIndex;
-    globalIndex += 1;
-
-    if (globalState[currentIndex] === undefined) {
-    globalState[currentIndex] = initialValue;
-    }
-
-    function setState(value: SetStateAction<T>): void {
-        if (typeof value === 'function') {
-            // If the value is a function, apply it to the previous state
-            globalState[currentIndex] = (value as (prevState: T) => T)(globalState[currentIndex]);
-        } else {
-            // If the value is not a function, set it directly
-            globalState[currentIndex] = value;
-        }
-
-        // Trigger re-render (in a real React implementation, this would schedule a re-render)
-        // render();
-    }
-
-    return {
-        state: globalState[currentIndex],
-        setState,
-    };
-}
-
-
-
-
+// It is responsible for comparing the new set of children with the old set of children and making the necessary updates to the virtual DOM.
 function reconcileChildren(wipFiber:Fiber, elements:Fiber[]) {
     let index = 0;
     let oldFiber = wipFiber.alternate && wipFiber.alternate.child
@@ -236,6 +204,7 @@ function reconcileChildren(wipFiber:Fiber, elements:Fiber[]) {
         let newFiber = null;
         const sameType = oldFiber && element && element.type === oldFiber.type;
         if(sameType){
+            // Update the existing fiber with new props
             newFiber = {
                 type: oldFiber?.type,
                 props: element.props,
@@ -246,6 +215,7 @@ function reconcileChildren(wipFiber:Fiber, elements:Fiber[]) {
             }
         }
         if(!sameType && element){
+            // Create a new fiber for a new element
             newFiber = {
                 type: element.type,
                 props: element.props,
@@ -255,6 +225,7 @@ function reconcileChildren(wipFiber:Fiber, elements:Fiber[]) {
                 effectTag: "PLACEMENT",
             }
         }
+        // Mark the old fiber for deletion
         if(!sameType && oldFiber){
             oldFiber.effectTag = "DELECTION"
             deletions.push(oldFiber)
@@ -263,8 +234,10 @@ function reconcileChildren(wipFiber:Fiber, elements:Fiber[]) {
             oldFiber = oldFiber.sibling
         }
         if(index === 0){
+            // Set the child of the current fiber
             wipFiber.child = newFiber
         }else if(element && prevSibling){
+            // Set the sibling of the previous fiber
             prevSibling.sibling = newFiber
         }
         prevSibling = newFiber
@@ -273,7 +246,9 @@ function reconcileChildren(wipFiber:Fiber, elements:Fiber[]) {
     }
 }
 
-
+// The render function in your Fiber reconciliation system is responsible for initiating the rendering process. 
+// It creates the root of the virtual DOM tree (wipRoot), sets the initial unit of work (nextUnitOfWork), 
+// and kicks off the rendering process using requestIdleCallback. 
 function render(element:Fiber, container:HTMLElement | Text) {
     wipRoot = {
         dom: container,
@@ -283,20 +258,28 @@ function render(element:Fiber, container:HTMLElement | Text) {
         alternate: currentRoot,
     }
 
+    // Initialize the list of deletions
     deletions = [];
+
+    // Set the initial unit of work to the root
     nextUnitOfWork = wipRoot;
 
+    // Kick off the rendering process
     requestIdleCallback(workLoop);
 }
 
 
-
+// The workLoop function in your Fiber reconciliation system is responsible for iteratively performing units of work until there are no more units of work (nextUnitOfWork becomes null)
 function workLoop(deadline: IdleObject) {
     let shouldYield = false;
+
+    // Continue the loop until there are no more units of work or time expires
     while (nextUnitOfWork && !shouldYield) {
       nextUnitOfWork = performUnitOfWork(nextUnitOfWork);
       shouldYield = deadline.timeRemaining() < 1;
     }
+
+    // If there are no more units of work and the root is set, commit the changes
     if (!nextUnitOfWork && wipRoot) {
       commitRoot();
     }
@@ -312,5 +295,4 @@ function workLoop(deadline: IdleObject) {
 export {
     render,
     createElement,
-    useState,
 }

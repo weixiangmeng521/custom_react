@@ -1,6 +1,5 @@
 // import { render, createElement } from "./custom/render";
-import { render, createElement, FiberProps, Fiber } from "./custom/fiber";
-
+import { render, createElement } from "./custom/fiber";
 
 
 // function main() {
@@ -29,8 +28,7 @@ import { render, createElement, FiberProps, Fiber } from "./custom/fiber";
 
 
 
-function main() {
-
+(function(){
     const el = createElement(
         "div",
         {id: "foo"},
@@ -47,5 +45,5 @@ function main() {
 
     const container:HTMLElement|null = document.getElementById("app");
     container && render(el, container);
-}
-main();
+})();
+
