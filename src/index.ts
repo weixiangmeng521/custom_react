@@ -29,7 +29,7 @@ import { render, createElement } from "./custom/fiber";
 
 
 (function(){
-    const el = createElement(
+    const dom = createElement(
         "div",
         {id: "foo"},
         createElement("a", null, "bar"),
@@ -44,6 +44,6 @@ import { render, createElement } from "./custom/fiber";
 
 
     const container:HTMLElement|null = document.getElementById("app");
-    container && render(el, container);
+    container && render(dom, container);
 })();
 
