@@ -75,9 +75,38 @@ const dom = createElement(
 - 最后，React使用计算出的最小变更集更新实际 DOM。
 - 这种更新通常使用高效的技术，例如批处理更新，以及在支持的情况下使用 requestAnimationFrame API。
 
---- 
-通过使用虚拟 DOM，React旨在提供一种更有效的更新 UI 的方式。它减少了对实际 DOM 的直接操作数量，并有助于改善应用程序的性能，特别是在需要频繁更新 UI 的情况下。
+---
+* 通过使用虚拟 DOM，React旨在提供一种更有效的更新 UI 的方式。它减少了对实际 DOM 的直接操作数量，并有助于改善应用程序的性能，特别是在需要频繁更新 UI 的情况下。
 
-请注意，这是一个简化的解释，实际的实现细节可能更复杂。React 的协调算法是确保这一过程高效运行的关键部分，以确保更新以最佳方式执行。
+* 请注意，这是一个简化的解释，实际的实现细节可能更复杂。React 的协调算法是确保这一过程高效运行的关键部分，以确保更新以最佳方式执行。
 
-
+---
+## Fiber的调度单元： Fiber Node
+通过节点上的 child（孩子）、return（父）和 sibling （兄弟）属性串联着其他节点，形成了一棵 Fiber Tree (类似Virtual DOM tree)
+Fiber Tree 是由 Fiber Node 构成的，更像是一个单链表构成的树，便于向上/向下/向兄弟节点转换
+```typescript
+// fiber node interface
+export interface Fiber{
+    tag?: string,
+    type?: string | ((props:FiberProps) => Fiber),
+    // 单链表树结构
+    parent?: Fiber,
+    child?: Fiber | null,
+    sibling?: Fiber | null,
+    // 在渲染完成之后他们会交换位置
+    alternate?: Fiber | null,
+    // 跟当前Fiber相关本地状态（比如浏览器环境就是DOM节点）
+    stateNode?: HTMLElement | Text,
+    props: FiberProps,
+    partialState?: Fiber | null,
+    // Effect 相关的
+    effectTag?: string,
+    hooks?: [],
+    dom?: Text | HTMLElement | null,
+}
+```
+![Alt text](./img/fiber.webp)
+组件是React 应用中的基础单元，应用以组件树形式组织，渲染组件；
+Fiber 调和的基础单元则是 fiber（调和单元），应用与 Fiber Tree 形式组织，应用 Fiber 算法；
+组件树和 fiber 树结构对应，一个组件实例有一个对应的 fiber 实例；
+Fiber 负责整个应用层面的调和，fiber 实例负责对应组件的调和；
