@@ -60,8 +60,14 @@ const rollupConfig = {
       file: path.join(paths.output, config.bundleName),
       format: 'iife',
       name: pkg.name,
+      sourcemap: process.env.NODE_ENV === "development", // Enable source maps
     },
   ],
+  inlineDynamicImports: true,
+  preserveEntrySignatures: false,
+  assert: {
+    json: true,
+  },
   // external: ['lodash'], // 指出应将哪些模块视为外部模块，如 Peer dependencies 中的依赖
   // plugins 需要注意引用顺序
   plugins: [
