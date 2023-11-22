@@ -45,7 +45,7 @@ function main() {
     )
 
 
-    const container:HTMLElement|null = document.getElementById("app")
+    const container:HTMLElement|null = document.getElementById("app");
     container && render(el, container);
 }
 main();

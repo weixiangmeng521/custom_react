@@ -1,5 +1,6 @@
 import { requestIdleCallback, IdleObject } from "./requestIdleCallback";
 
+// fiber node interface
 export interface Fiber{
     tag?: string,
     type?: string | ((props:FiberProps) => Fiber),
@@ -78,9 +79,7 @@ function updateDom(dom:any, prevProps:FiberProps, nextProps:FiberProps) {
     })
     
     Object.keys(prevProps || {}).filter(isAttribute).forEach((name:string) => dom[name] = null);
-
     Object.keys(nextProps || {}).filter(isAttribute).forEach((name:string) => dom[name] = nextProps[name]);
-
     Object.keys(nextProps || {}).filter(isEvent).forEach(name => {
         const eventType = name.toLowerCase().substring(2);
         dom.addEventListener(eventType, nextProps[name]);
@@ -157,11 +156,13 @@ function performUnitOfWork(fiber:Fiber):Fiber | undefined {
 
     if(fiber.child)return fiber.child
 
-    let nextFiber:Fiber|null|undefined = fiber
+    let nextFiber:Fiber|null|undefined = fiber;
     while(nextFiber){
         if(nextFiber.sibling) return nextFiber.sibling
         nextFiber = nextFiber.parent
     }
+
+    debugger;
 }
 
 
@@ -183,9 +184,46 @@ function updateHostComponent(fiber:Fiber | null | undefined) {
 }
 
 
-// function useState() {
-    
-// }
+
+
+type SetStateAction<T> = T | ((prevState: T) => T);
+
+interface StateHook<T> {
+  state: T;
+  setState: (value: SetStateAction<T>) => void;
+}
+
+// A global array to store state values
+const globalState: any[] = [];
+let globalIndex = 0;
+
+function useState<T>(initialValue: T): StateHook<T> {
+    const currentIndex = globalIndex;
+    globalIndex += 1;
+
+    if (globalState[currentIndex] === undefined) {
+    globalState[currentIndex] = initialValue;
+    }
+
+    function setState(value: SetStateAction<T>): void {
+        if (typeof value === 'function') {
+            // If the value is a function, apply it to the previous state
+            globalState[currentIndex] = (value as (prevState: T) => T)(globalState[currentIndex]);
+        } else {
+            // If the value is not a function, set it directly
+            globalState[currentIndex] = value;
+        }
+
+        // Trigger re-render (in a real React implementation, this would schedule a re-render)
+        // render();
+    }
+
+    return {
+        state: globalState[currentIndex],
+        setState,
+    };
+}
+
 
 
 
@@ -247,26 +285,26 @@ function render(element:Fiber, container:HTMLElement | Text) {
 
     deletions = [];
     nextUnitOfWork = wipRoot;
+
+    requestIdleCallback(workLoop);
 }
 
 
-function workLoop(deadline:IdleObject) {
+
+function workLoop(deadline: IdleObject) {
     let shouldYield = false;
-    while(nextUnitOfWork && !shouldYield){
-        nextUnitOfWork = performUnitOfWork(
-            nextUnitOfWork
-        )
-        shouldYield = deadline.timeRemaining() < 1
+    while (nextUnitOfWork && !shouldYield) {
+      nextUnitOfWork = performUnitOfWork(nextUnitOfWork);
+      shouldYield = deadline.timeRemaining() < 1;
     }
-    if(!nextUnitOfWork && wipRoot){
-        commitRoot()
+    if (!nextUnitOfWork && wipRoot) {
+      commitRoot();
     }
-
+  
+    // Log the remaining time in the console for debugging
     // console.log(deadline.timeRemaining());
-    requestIdleCallback(workLoop)
-}
-requestIdleCallback(workLoop)
-
+    requestIdleCallback(workLoop);
+  }
 
 
 
@@ -274,4 +312,5 @@ requestIdleCallback(workLoop)
 export {
     render,
     createElement,
+    useState,
 }

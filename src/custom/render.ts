@@ -39,7 +39,7 @@ export const createTextElement = (
     }
 }
 
-
+// render function
 export const render = (
     element:CustomHtmlElement, 
     container:HTMLElement
