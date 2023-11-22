@@ -3,7 +3,7 @@ custom react
 
 根据react的virtual dom写的项目
 - 用于学习react的virtual dom
-
+1
 ---
 
 虚拟 DOM（Document Object Model）是在库和框架中（如React）使用的一个概念，
@@ -13,12 +13,12 @@ custom react
 
 ---
 
-## 下载依赖
+### 下载依赖
 ```bash
 npm install i
 ```
 
-## 运行模式
+### 运行模式
 * development
 开启liveserver，配置了sourcemap，方便更好学习
 ```bash
@@ -31,7 +31,7 @@ npm install dev
 npm install build
 ```
 
-## 初体验
+### 初体验
 可以给dom添加属性(attribute, property),还有绑定事件
 ```javascript
 const dom = createElement(
@@ -48,13 +48,7 @@ const dom = createElement(
 )
 ```
 
-### TODO
-* 完成useState钩子
-* html转化成javascript对象
-* 实现路由
-* 实现状态管理redux
-
-## 以下是React中虚拟 DOM 的工作原理的简化概述：
+### 以下是React中虚拟 DOM 的工作原理的简化概述：
 
 1. 初始渲染:
 - 当你定义一个React组件并首次渲染时，React会创建UI的虚拟 DOM 表示。
@@ -81,7 +75,7 @@ const dom = createElement(
 * 请注意，这是一个简化的解释，实际的实现细节可能更复杂。React 的协调算法是确保这一过程高效运行的关键部分，以确保更新以最佳方式执行。
 
 ---
-## Fiber的调度单元： Fiber Node
+### Fiber的调度单元： Fiber Node
 通过节点上的 child（孩子）、return（父）和 sibling （兄弟）属性串联着其他节点，形成了一棵 Fiber Tree (类似Virtual DOM tree)
 Fiber Tree 是由 Fiber Node 构成的，更像是一个单链表构成的树，便于向上/向下/向兄弟节点转换
 ```typescript
@@ -106,7 +100,14 @@ export interface Fiber{
 }
 ```
 ![Alt text](./img/fiber.webp)
-组件是React 应用中的基础单元，应用以组件树形式组织，渲染组件；
-Fiber 调和的基础单元则是 fiber（调和单元），应用与 Fiber Tree 形式组织，应用 Fiber 算法；
-组件树和 fiber 树结构对应，一个组件实例有一个对应的 fiber 实例；
-Fiber 负责整个应用层面的调和，fiber 实例负责对应组件的调和；
+- 组件是React 应用中的基础单元，应用以组件树形式组织，渲染组件；
+- Fiber 调和的基础单元则是 fiber（调和单元），应用与 Fiber Tree 形式组织，应用 Fiber 算法；
+- 组件树和 fiber 树结构对应，一个组件实例有一个对应的 fiber 实例；
+- Fiber 负责整个应用层面的调和，fiber 实例负责对应组件的调和；
+
+
+#### TODO
+* 完成useState钩子
+* html转化成javascript对象
+* 实现路由
+* 实现状态管理redux
