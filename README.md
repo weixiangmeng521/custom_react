@@ -1,4 +1,4 @@
-custom react
+# custom react
 =========================
 
 根据react的virtual dom写的项目
@@ -13,12 +13,12 @@ custom react
 
 ---
 
-### 下载依赖
+## 下载依赖
 ```bash
 npm install i
 ```
 
-### 运行模式
+## 运行模式
 * development
 开启liveserver，配置了sourcemap，方便更好学习
 ```bash
@@ -31,7 +31,7 @@ npm install dev
 npm install build
 ```
 
-### 初体验
+## 初体验
 可以给dom添加属性(attribute, property),还有绑定事件
 ```javascript
 const dom = createElement(
@@ -48,7 +48,7 @@ const dom = createElement(
 )
 ```
 
-### 以下是React中虚拟 DOM 的工作原理的简化概述：
+## 以下是React中虚拟 DOM 的工作原理的简化概述：
 
 1. 初始渲染:
 - 当你定义一个React组件并首次渲染时，React会创建UI的虚拟 DOM 表示。
@@ -75,7 +75,7 @@ const dom = createElement(
 * 请注意，这是一个简化的解释，实际的实现细节可能更复杂。React 的协调算法是确保这一过程高效运行的关键部分，以确保更新以最佳方式执行。
 
 ---
-### Fiber的调度单元： Fiber Node
+## Fiber的调度单元： Fiber Node
 通过节点上的 child（孩子）、return（父）和 sibling （兄弟）属性串联着其他节点，形成了一棵 Fiber Tree (类似Virtual DOM tree)
 Fiber Tree 是由 Fiber Node 构成的，更像是一个单链表构成的树，便于向上/向下/向兄弟节点转换
 ```typescript
@@ -106,7 +106,7 @@ export interface Fiber{
 - Fiber 负责整个应用层面的调和，fiber 实例负责对应组件的调和；
 
 
-#### TODO
+### TODO
 * 完成useState钩子
 * html转化成javascript对象
 * 实现路由
