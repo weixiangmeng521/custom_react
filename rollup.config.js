@@ -18,7 +18,7 @@ const paths = {
 }
 
 const config = {
-  title: "hello world",
+  title: "React",
   // html文件位置
   html: path.join(__dirname, '/public/index.html'),
   // bundle的名称
