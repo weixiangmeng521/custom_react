@@ -60,7 +60,7 @@ const rollupConfig = {
       file: path.join(paths.output, config.bundleName),
       format: 'iife',
       name: pkg.name,
-      sourcemap: process.env.NODE_ENV === "development", // Enable source maps
+      sourcemap: true, // Enable source maps
     },
   ],
   inlineDynamicImports: true,

@@ -1,7 +1,7 @@
 // import { render, createElement } from "./custom/render";
 import { render, createElement } from "./custom/fiber";
-import { parse } from "./custom/html_parser/index";
 import { html } from "./components/html";
+import { toFiberTree } from "./custom/convert"
 
 // function main() {
 //     const container:HTMLElement|null = document.getElementById("app")
@@ -45,10 +45,10 @@ import { html } from "./components/html";
     );
     
 
-    const tree = parse(html);
-    console.log(tree);
+
+    const fiberTree = toFiberTree(html);
 
     const container:HTMLElement|null = document.getElementById("app");
-    container && render(dom, container);
+    container && fiberTree && render(fiberTree, container);
 })();
 

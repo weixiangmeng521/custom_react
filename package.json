@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/index.ts",
   "scripts": {
-    "dev": "set NODE_ENV=development && rollup --config rollup.dev.config.js -w",
+    "dev": "rm -rf dist && set NODE_ENV=development && rollup --config rollup.dev.config.js -w",
     "build": "rm -rf dist && set NODE_ENV=production && rollup --config rollup.pro.config.js"
   },
   "author": "",

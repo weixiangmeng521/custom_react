@@ -17,7 +17,7 @@ export const html =
                 <form id="form">
                     <label>Input (HTML):</label><br />
                     <textarea cols="60" rows="10" id="input" style="width: 100%;"></textarea><br />
-                    <input type="submit" value="Run" class="btn btn-primary" />
+                    <input type="submit" value="Run" class="btn btn-primary" onClick="(e) => alert(1)" />
                 </form>
                 <br />
                 <label>Output (XML):</label><br />

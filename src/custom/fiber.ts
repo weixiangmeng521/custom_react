@@ -89,7 +89,13 @@ function updateDom(dom:any, prevProps:FiberProps, nextProps:FiberProps) {
     // Add or remove event listeners
     Object.keys(nextProps || {}).filter(isEvent).forEach(name => {
         const eventType = name.toLowerCase().substring(2);
-        dom.addEventListener(eventType, nextProps[name]);
+
+        let handler:(string | Fiber | string[] | Fiber[] | EventListenerOrEventListenerObject) = nextProps[name]; 
+        // for template, convert string to handler function
+        if(typeof nextProps[name] === "string"){
+            handler = new Function((nextProps[name]) as string) as EventListenerOrEventListenerObject;
+        }
+        dom.addEventListener(eventType, handler);
     })
 
     // Add or remove event listeners

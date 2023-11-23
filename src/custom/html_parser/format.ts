@@ -22,7 +22,7 @@ export function format(nodes:any[], options:any): any {
                 tagName: node.tagName.toLowerCase(),
                 attributes: formatAttributes(node.attributes),
                 children: format(node.children, options),
-                position: null,
+                position: 0,
             }
         : { type, content: node.content }
         
