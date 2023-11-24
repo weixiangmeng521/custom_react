@@ -17,12 +17,12 @@ export const parseDefaults = {
   includePositions: false,
 }
 
-export function parse(str:string, options = parseDefaults) {
+export function parse(str, options = parseDefaults) {
   const tokens = lexer(str, options)
   const nodes = parser(tokens, options)
   return format(nodes, options)
 }
 
-export function stringify(ast:any, options = parseDefaults) {
+export function stringify(ast, options = parseDefaults) {
   return toHTML(ast, options)
 }

@@ -1,7 +1,9 @@
 // import { render, createElement } from "./custom/render";
 import { render, createElement } from "./custom/fiber";
-import { html } from "./components/html";
-import { toFiberTree } from "./custom/convert"
+
+// @ts-ignore
+import htmlFiberTree from "./example/index.html"
+
 
 // function main() {
 //     const container:HTMLElement|null = document.getElementById("app")
@@ -31,24 +33,11 @@ import { toFiberTree } from "./custom/convert"
 
 
 (function(){
-    const dom = createElement(
-        "div",
-        {id: "foo"},
-        createElement("a", {href: "foo"}, "bar"),
-        createElement("p", null, "12312"),
-        createElement("button", {
-            id: "btn",
-            onClick: (e:Event) => {
-                console.log(e);
-            },
-        }, "按钮")
-    );
-    
-
-
-    const fiberTree = toFiberTree(html);
 
     const container:HTMLElement|null = document.getElementById("app");
-    container && fiberTree && render(fiberTree, container);
+    container && render(htmlFiberTree, container);
+
+    
+
 })();
 

@@ -1,6 +1,6 @@
 import { startsWith, endsWith, stringIncludes, arrayIncludes } from './compat'
 
-export function feedPosition(position:any, str:string, len:number) {
+export function feedPosition(position, str, len) {
   const start = position.index
   const end = (position.index = start + len)
   for (let i = start; i < end; i++) {
@@ -14,7 +14,7 @@ export function feedPosition(position:any, str:string, len:number) {
   }
 }
 
-export function jumpPosition(position:any, str:string, end:number) {
+export function jumpPosition(position, str, end) {
   const len = end - position.index
   return feedPosition(position, str, len)
 }
@@ -27,7 +27,7 @@ export function makeInitialPosition() {
   }
 }
 
-export function copyPosition(position:any) {
+export function copyPosition(position) {
   return {
     index: position.index,
     line: position.line,
@@ -35,7 +35,7 @@ export function copyPosition(position:any) {
   }
 }
 
-export default function lexer(str:string, options:any):any[] {
+export default function lexer(str, options) {
   const state = {
     str,
     options,
@@ -46,7 +46,7 @@ export default function lexer(str:string, options:any):any[] {
   return state.tokens
 }
 
-export function lex(state:any) {
+export function lex(state) {
   const {
     str,
     options: { childlessTags },
@@ -71,7 +71,7 @@ export function lex(state:any) {
 }
 
 const alphanumeric = /[A-Za-z0-9]/
-export function findTextEnd(str:string, index:number) {
+export function findTextEnd(str, index) {
   while (true) {
     const textEnd = str.indexOf('<', index)
     if (textEnd === -1) {
@@ -85,7 +85,7 @@ export function findTextEnd(str:string, index:number) {
   }
 }
 
-export function lexText(state:any) {
+export function lexText(state) {
   const type = 'text'
   const { str, position } = state
   let textEnd = findTextEnd(str, position.index)
@@ -101,7 +101,7 @@ export function lexText(state:any) {
   state.tokens.push({ type, content, position: { start, end } })
 }
 
-export function lexComment(state:any) {
+export function lexComment(state) {
   const { str, position } = state
   const start = copyPosition(position)
   feedPosition(position, str, 4) // "<!--".length
@@ -123,7 +123,7 @@ export function lexComment(state:any) {
   })
 }
 
-export function lexTag(state:any) {
+export function lexTag(state) {
   const { str, position } = state
   {
     const secondChar = str.charAt(position.index + 1)
@@ -146,11 +146,11 @@ export function lexTag(state:any) {
 
 // See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#special-white-space
 const whitespace = /\s/
-export function isWhitespaceChar(char:string) {
+export function isWhitespaceChar(char) {
   return whitespace.test(char)
 }
 
-export function lexTagName(state:any) {
+export function lexTagName(state) {
   const { str, position } = state
   const len = str.length
   let start = position.index
@@ -178,7 +178,7 @@ export function lexTagName(state:any) {
   return tagName
 }
 
-export function lexTagAttributes(state:any) {
+export function lexTagAttributes(state) {
   const { str, position, tokens } = state
   let cursor = position.index
   let quote = null // null, single-, or double-quote
@@ -269,7 +269,7 @@ export function lexTagAttributes(state:any) {
 
 const push = [].push
 
-export function lexSkipTag(tagName:string, state:any) {
+export function lexSkipTag(tagName, state) {
   const { str, position, tokens } = state
   const safeTagName = tagName.toLowerCase()
   const len = str.length

@@ -25,5 +25,8 @@
     "rollup-plugin-typescript": "^1.0.1",
     "rollup-plugin-uglify": "^6.0.4",
     "tslib": "^2.1.0"
+  },
+  "dependencies": {
+    "@rollup/pluginutils": "^5.0.5"
   }
 }

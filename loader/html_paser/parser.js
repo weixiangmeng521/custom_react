@@ -1,13 +1,13 @@
 import { arrayIncludes } from './compat'
 
-export default function parser(tokens:any[], options:any) {
+export default function parser(tokens, options) {
   const root = { tagName: null, children: [] }
   const state = { tokens, options, cursor: 0, stack: [root] }
   parse(state)
   return root.children
 }
 
-export function hasTerminalParent(tagName:string, stack:any[], terminals:any) {
+export function hasTerminalParent(tagName, stack, terminals) {
   const tagParents = terminals[tagName]
   if (tagParents) {
     let currentIndex = stack.length - 1
@@ -26,10 +26,10 @@ export function hasTerminalParent(tagName:string, stack:any[], terminals:any) {
 }
 
 export function rewindStack(
-  stack:any[],
-  newLength:number,
-  childrenEndPosition:number,
-  endPosition:number,
+  stack,
+  newLength,
+  childrenEndPosition,
+  endPosition,
 ) {
   stack[newLength].position.end = endPosition
   for (let i = newLength + 1, len = stack.length; i < len; i++) {
@@ -38,7 +38,7 @@ export function rewindStack(
   stack.splice(newLength)
 }
 
-export function parse(state:any) {
+export function parse(state) {
   const { tokens, options } = state
   let { stack } = state
   let nodes = stack[stack.length - 1].children
@@ -119,7 +119,7 @@ export function parse(state:any) {
     }
 
     cursor++
-    const children:any[] = [];
+    const children = []
     const position = {
       start: token.position.start,
       end: attrToken.position.end,

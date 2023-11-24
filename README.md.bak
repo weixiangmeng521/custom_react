@@ -24,6 +24,20 @@ https://juejin.cn/post/6844904058394771470
 ``` js
 import { render } from "./custom/render";
 
+    const dom = createElement(
+        "div",
+        {id: "foo"},
+        createElement("a", {href: "foo"}, "bar"),
+        createElement("p", null, "12312"),
+        createElement("button", {
+            id: "btn",
+            onClick: (e:Event) => {
+                console.log(e);
+            },
+        }, "按钮")
+    );
+    
+
 const el = Mine.createElement(
     "div",
     {id: "foo"},

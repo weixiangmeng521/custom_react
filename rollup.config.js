@@ -6,6 +6,7 @@ import commonjs from 'rollup-plugin-commonjs'
 import { eslint } from 'rollup-plugin-eslint'  
 import { DEFAULT_EXTENSIONS } from '@babel/core'
 import pkg from './package.json'
+import customImportPlugin from './loader/custom_import_plugin';
 
 import json from '@rollup/plugin-json';
 import alias from '@rollup/plugin-alias';
@@ -71,6 +72,12 @@ const rollupConfig = {
   // external: ['lodash'], // 指出应将哪些模块视为外部模块，如 Peer dependencies 中的依赖
   // plugins 需要注意引用顺序
   plugins: [
+    customImportPlugin({
+      include: 'src/**/*.html', // 包含的文件
+      // exclude: 'src/**/*.json', // 可选，排除的文件
+    }),
+
+
     // 验证导入的文件
     eslint({
       throwOnError: true, // lint 结果有错误将会抛出异常

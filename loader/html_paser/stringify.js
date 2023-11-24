@@ -1,6 +1,6 @@
 import { arrayIncludes } from './compat'
 
-export function formatAttributes(attributes:any[]) {
+export function formatAttributes(attributes) {
   return attributes.reduce((attrs, attribute) => {
     const { key, value } = attribute
     if (value === null) {
@@ -12,9 +12,9 @@ export function formatAttributes(attributes:any[]) {
   }, '')
 }
 
-export function toHTML(tree:any, options:any) {
+export function toHTML(tree, options) {
   return tree
-    .map((node:any) => {
+    .map((node) => {
       if (node.type === 'text') {
         return node.content
       }
