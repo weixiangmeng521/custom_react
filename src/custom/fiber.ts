@@ -69,6 +69,7 @@ function createDom(vdom:Fiber) {
     ? document.createTextNode("")
     : document.createElement((vdom.type as string) || "div");
     
+    // debugger;
     updateDom(dom, {children: []}, vdom.props)
     return dom;
 }
@@ -305,4 +306,5 @@ function workLoop(deadline: IdleObject) {
 export {
     render,
     createElement,
+    createTextElement,
 }

@@ -1,4 +1,4 @@
-import { createElement, Fiber } from "./fiber";
+import { createElement, createTextElement, Fiber } from "./fiber";
 import { parse } from "./html_parser/index";
 
 
@@ -51,11 +51,11 @@ export const toFiberTree = (html:string) => {
 
         if(node.type === "text"){
             node.type = "TEXT";
-            return createElement("", null, node.content ?? "");
+            return createTextElement(node.content ?? "");
         }
 
         return createElement(
-            node.tagName ?? "div",
+            node.tagName ?? "",
             mergeAttr(node),
             ...childrenNodes,
         );
