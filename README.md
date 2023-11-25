@@ -2,15 +2,13 @@
 
 根据react的virtual dom写的项目
 - 用于学习react的virtual dom
-1
----
+
 
 虚拟 DOM（Document Object Model）是在库和框架中（如React）使用的一个概念，
 * 用于提高更新用户界面（UI）的效率。
 * 其核心思想是创建一个轻量级的内存中表示实际 DOM 结构的虚拟表示
 * 对这个虚拟表示进行更新，然后基于这些变化高效地更新实际 DOM。
 
----
 
 ## 下载依赖
 ```bash
