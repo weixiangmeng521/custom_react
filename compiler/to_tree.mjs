@@ -1,5 +1,5 @@
 import { parse } from "./html_paser/index.mjs"
-
+import { unescapedString } from "./html_paser/escape.mjs"
 
 
 // create virual element
@@ -52,13 +52,11 @@ export const toFiberTree = (html) => {
     // Recursive function to traverse the HTML tree
     const recursive = (node) => {
         if (!node) return;
-    
         const childrenNodes = (node.children || []).map((item) => recursive(item)).filter(Boolean);
-    
         if (node.type === "text") {
-            return createTextElement(node.content ?? "");
+            const content = unescapedString(node.content);
+            return createTextElement(content ?? "");
         }
-    
         return createElement(
             node.tagName ?? "",
             convertAttributesToObject(node),

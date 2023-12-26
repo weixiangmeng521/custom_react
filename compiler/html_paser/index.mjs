@@ -24,5 +24,5 @@ export function parse(str, options = parseDefaults) {
 }
 
 export function stringify(ast, options = parseDefaults) {
-  return toHTML(ast, options)
+  return toHTML(ast, options);
 }

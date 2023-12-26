@@ -67,3 +67,20 @@ export const voidTags = [
   'track',
   'wbr',
 ]
+
+
+export const htmlEscape = {
+  '&lt;': '<',
+  '&gt;': '>',
+  '&amp;': '&',
+  '&quot;': '"',
+  '&apos;': "'",
+  '&nbsp;': ' ',
+  '&copy;': '©',
+  '&reg;': '®',
+  '&trade;': '™',
+  '&euro;': '€',
+  '&pound;': '£',
+  '&yen;': '¥',
+  // Add more escape characters as needed
+};

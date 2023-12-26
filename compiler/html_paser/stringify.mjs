@@ -32,8 +32,7 @@ export function toHTML(tree, options) {
             children,
             options,
           )}</${tagName}>`
-    })
-    .join('')
+    }).join('');
 }
 
 export default { toHTML }
