@@ -32,6 +32,9 @@ export function createTextElement(text) {
 
 
 // Convert HTML tree to Fiber tree
+// TODO: 支持模版语法
+// TODO: 支持属性绑定
+// TODO: 支持DOM属性
 export const toFiberTree = (html) => {
     const tree = parse(html);
   

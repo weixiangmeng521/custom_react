@@ -16,7 +16,7 @@
                 <form id="form">
                     <label>Input (HTML):</label><br />
                     <textarea cols="60" rows="10" id="input" style="width: 100%;"></textarea><br />
-                    <input type="submit" value="Run" class="btn btn-primary" onClick="(e) => alert(1)" />
+                    <input type="submit" value="Run" class="btn btn-primary" onClick="alert('12312')" />
                 </form>
                 <br />
                 <label>Output (XML):</label><br />
