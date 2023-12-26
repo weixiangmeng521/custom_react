@@ -1,4 +1,4 @@
-import { startsWith, endsWith, stringIncludes, arrayIncludes } from './compat'
+import { startsWith, endsWith, stringIncludes, arrayIncludes } from './compat.mjs'
 
 export function feedPosition(position, str, len) {
   const start = position.index

@@ -1,13 +1,13 @@
-import lexer from './lexer'
-import parser from './parser'
-import { format } from './format'
-import { toHTML } from './stringify'
+import lexer from './lexer.mjs'
+import parser from './parser.mjs'
+import { format } from './format.mjs'
+import { toHTML } from './stringify.mjs'
 import {
   voidTags,
   closingTags,
   childlessTags,
   closingTagAncestorBreakers,
-} from './tags'
+} from './tags.mjs'
 
 export const parseDefaults = {
   voidTags,

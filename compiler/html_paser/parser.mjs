@@ -1,4 +1,4 @@
-import { arrayIncludes } from './compat'
+import { arrayIncludes } from './compat.mjs'
 
 export default function parser(tokens, options) {
   const root = { tagName: null, children: [] }

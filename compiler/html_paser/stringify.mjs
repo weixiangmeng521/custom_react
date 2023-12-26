@@ -1,4 +1,4 @@
-import { arrayIncludes } from './compat'
+import { arrayIncludes } from './compat.mjs'
 
 export function formatAttributes(attributes) {
   return attributes.reduce((attrs, attribute) => {

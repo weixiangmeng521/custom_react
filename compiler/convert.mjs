@@ -1,4 +1,4 @@
-import { parse } from "./html_paser/index"
+import { parse } from "./html_paser/index.mjs"
 
 
 
