@@ -1,4 +1,4 @@
 export default {
-    extension: ".html",
+    extension: ".tpl",
 
 }

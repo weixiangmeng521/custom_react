@@ -1,8 +1,8 @@
-import base, { build, templateCompilerConfig } from "./rollup.config.mjs"
+import base, { buildPublic } from "./rollup.config.mjs"
 import serve from 'rollup-plugin-serve';
 import livereload from 'rollup-plugin-livereload'
 
-build();
+buildPublic();
 
 export default [{
     ...base,
@@ -17,4 +17,4 @@ export default [{
         port: 8888,
       }),
     ]
-}, templateCompilerConfig]
+}]

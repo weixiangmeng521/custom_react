@@ -5,47 +5,28 @@ import pluginConfig from "./config.mjs"
 import { consola } from "consola";
 
 
+
 export default function compilerImportPlugin(options = {}) {
+  // set default
+  if(!options || !options.include) {
+    options.include = `src/**/*${pluginConfig.extension}`;
+  }
+
   const filter = createFilter(options.include, options.exclude);
 
   return {
     name: 'compiler-import-plugin',
 
-    // transform(code, id) {
-    //   // 使用正则表达式匹配动态 import
-    //   const __dirname = dirname(fileURLToPath(import.meta.url));
-      
-    //   const importRegex = /import\s*\(\s*([^)]+)\s*\)/g;
-    //   const stringWithoutQuotes = (stringWithQuotes) => stringWithQuotes.replace(/['"]/g, '');
-    //   let modifiedCode = code;
-
-    //   let match;
-    //   while ((match = importRegex.exec(code)) !== null) {
-    //     const mapping = options.common.dynamicMapping;
-    //     const regularPath = path.resolve(options.common.root + "/" + stringWithoutQuotes(match[1]));
-    //     const replacedPath = mapping[regularPath].replace(__dirname + "/dist/", "");
-
-    //     // 例如，替换动态 import 为静态 import
-    //     const replacement = `import("${replacedPath}")`;
-    //     modifiedCode = modifiedCode.replace(match[0], replacement);
-
-    //     consola.info(replacement);
-
-    //     // TODO: match[1] 的error处理
-    //   }
-
-    //   return {
-    //     code: modifiedCode, // 返回 null 表示不修改源代码
-    //     map: null,
-    //   }
-    // },
-
-
     resolveId(source, importer) {
       // 只处理以 extension 结尾的 import
       if (filter(source) && source.endsWith(pluginConfig.extension)) {
         // 构建完整的路径
-        const resolvedPath = importer ? new URL(source, importer).pathname : source;
+        let resolvedPath = "";
+        try{
+          resolvedPath = importer ? new URL(source, importer).pathname : source;
+        }catch(e){
+          return source;
+        }
 
         // 检查文件是否存在
         if (fs.existsSync(resolvedPath)) {
@@ -57,6 +38,8 @@ export default function compilerImportPlugin(options = {}) {
       }
     },
 
+
+
     load(id) {
       if (filter(id) && id.endsWith(pluginConfig.extension)) {
         // Read the content of the file
@@ -67,7 +50,6 @@ export default function compilerImportPlugin(options = {}) {
         return `export default ${JSON.stringify(tree)};`;
       }
     },
-
 
   };
 }

@@ -1,12 +1,12 @@
-import base, { build, templateCompilerConfig } from "./rollup.config.mjs"
-import { uglify } from 'rollup-plugin-uglify';
+import base, { buildPublic } from "./rollup.config.mjs"
+import { terser } from 'rollup-plugin-terser';
 
-build();
+buildPublic();
 
 export default [{
     ...base,
     plugins: [
         ...base.plugins,
-        uglify()
+        terser()
     ],
-}, templateCompilerConfig];
+}];
