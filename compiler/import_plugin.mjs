@@ -1,8 +1,7 @@
 import { createFilter } from '@rollup/pluginutils'
 import fs from 'fs'
-import { toFiberTree } from "./to_tree.mjs"
+import { toFiberTree, toFiberTreeText } from "./to_tree.mjs"
 import pluginConfig from "./config.mjs"
-import { consola } from "consola";
 
 
 export default function compilerImportPlugin(options = {}) {
@@ -45,8 +44,14 @@ export default function compilerImportPlugin(options = {}) {
         const content = fs.readFileSync(id, 'utf-8');
         // Return the content as a object tree
 
-        const tree = toFiberTree(content);
-        return `export default ${JSON.stringify(tree)};`;
+        const tree = toFiberTreeText(content);
+return `
+import { createElement, createTextElement } from "@/internal/fiber";
+/** @ts-nocheck */
+export default {
+  render: function(){ return(${tree}) }
+}
+`;
       }
     },
 

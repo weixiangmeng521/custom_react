@@ -1,7 +1,7 @@
 import { requestIdleCallback, IdleObject } from "./requestIdleCallback";
 
 // fiber node interface
-export interface Fiber{
+export type Fiber = {
     tag?: string,
     type?: string | ((props:FiberProps) => Fiber),
     // 单链表树结构
@@ -20,17 +20,18 @@ export interface Fiber{
     dom?: Text | HTMLElement | null,
 }
 
-export interface FiberProps {
+export type FiberProps = {
     [key:string]:string | string[] | Fiber[] | Fiber | EventListenerOrEventListenerObject,
     children: Fiber[],
 }
 
 
-let nextUnitOfWork:Fiber|null|undefined = null
-let currentRoot:Fiber|null = null
-let wipRoot:Fiber|null  = null
-let deletions:Fiber[]  = []
-// let hookIndex:number = 0;
+let nextUnitOfWork:Fiber|null|undefined = null;
+let currentRoot:Fiber|null = null;
+let wipRoot:Fiber|null  = null;
+let deletions:Fiber[]  = [];
+let hookIndex:number = 0;
+
 
 
 // create virual element
@@ -102,7 +103,9 @@ function updateDom(dom:any, prevProps:FiberProps, nextProps:FiberProps) {
     // Add or remove event listeners
     Object.keys(prevProps).filter(isEvent).forEach((name:string) => {
         const eventType = name.toLowerCase().substring(2);
-        dom.removeEventListener(eventType, prevProps[name] as EventListenerOrEventListenerObject);
+        prevProps[name]
+        const handler = new Function((nextProps[name]) as string) as EventListenerOrEventListenerObject;
+        dom.removeEventListener(eventType, handler);
     })
     
 }
@@ -185,9 +188,9 @@ function performUnitOfWork(fiber:Fiber):Fiber | undefined {
 // Example function to update a function component
 function updateFunctionComponent(fiber:Fiber) {
     wipRoot = fiber 
-    // hookIndex = 0;
+    hookIndex = 0;
     wipRoot.hooks = [];
-    // eslint-disable-next-line
+
     const fn = fiber.type as ((props:FiberProps) => Fiber);
     const children = [fn(fiber.props)]
     reconcileChildren(fiber, children)
@@ -260,7 +263,8 @@ function reconcileChildren(wipFiber:Fiber, elements:Fiber[]) {
 // The render function in your Fiber reconciliation system is responsible for initiating the rendering process. 
 // It creates the root of the virtual DOM tree (wipRoot), sets the initial unit of work (nextUnitOfWork), 
 // and kicks off the rendering process using requestIdleCallback. 
-function render(element:Fiber, container:HTMLElement | Text) {
+function render(element:Fiber, container:HTMLElement | Text | null) {
+    if(!container) return;
     wipRoot = {
         dom: container,
         props: {
@@ -275,6 +279,8 @@ function render(element:Fiber, container:HTMLElement | Text) {
     // Set the initial unit of work to the root
     nextUnitOfWork = wipRoot;
 
+    console.log(wipRoot);
+    
     // Kick off the rendering process
     requestIdleCallback(workLoop);
 }
@@ -304,6 +310,7 @@ function workLoop(deadline: IdleObject) {
 
 
 export {
+    createDom,
     render,
     createElement,
     createTextElement,

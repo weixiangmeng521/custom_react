@@ -2,7 +2,7 @@
     <div class="row">
         <div class="span12">
             <div class="hero-unit">
-                <h1>Pure JavaScript HTML5 Parser</h1>
+                <h1>Pure JavaScript HTML5 Parser {{ this.name }}</h1>
                 <p>All-in-one: XML Serializer, DOM Builder, DOM Document Creator, A SAX-style API </p>
                 <p>
                     <a class="btn btn-primary btn-large" href="https://github.com/blowsie/Pure-JavaScript-HTML-Parser">Learn more</a>

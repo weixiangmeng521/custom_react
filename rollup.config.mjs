@@ -51,10 +51,9 @@ export const buildPublic = () => {
 // rollup 配置项
 const rollupConfig = {
   input: config.input,
-  output: 
-  {
+  output: {
       file: path.join(config.output, config.bundleName),
-      format: 'es', // iife
+      format: 'iife', // iife
       name: config.title,
       sourcemap: true, // Enable source maps
       inlineDynamicImports: true,
@@ -95,16 +94,16 @@ const rollupConfig = {
   
     json(),
   
-    babel({
-      babelHelpers: 'runtime',
-      // 只转换源代码，不运行外部依赖
-      exclude: 'node_modules/**',
-      // babel 默认不支持 ts 需要手动添加
-      extensions: [
-        ...DEFAULT_EXTENSIONS,
-        '.ts',
-      ],
-    }),
+    // babel({
+    //   babelHelpers: 'runtime',
+    //   // 只转换源代码，不运行外部依赖
+    //   exclude: 'node_modules/**',
+    //   // babel 默认不支持 ts 需要手动添加
+    //   extensions: [
+    //     ...DEFAULT_EXTENSIONS,
+    //     '.ts',
+    //   ],
+    // }),
   ],
 }
 

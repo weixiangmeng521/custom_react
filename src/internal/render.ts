@@ -31,7 +31,7 @@ export const createTextElement = (
     text?:string|null
 ):CustomHtmlElement => {
     return {
-        type: "TEXT_ELEMENT",
+        type: "TEXT",
         props: {
             nodeValue: text || "",
             children: [],

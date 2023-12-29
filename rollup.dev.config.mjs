@@ -10,7 +10,7 @@ export default [{
       ...base.plugins,
       livereload(),
       serve({
-        // open: true,
+        open: false,
         verbose: true,
         contentBase: "dist",
         host: "localhost",

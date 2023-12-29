@@ -1,5 +1,5 @@
 import base, { buildPublic } from "./rollup.config.mjs"
-import { terser } from 'rollup-plugin-terser';
+import { terser } from "rollup-plugin-minification";
 
 buildPublic();
 
