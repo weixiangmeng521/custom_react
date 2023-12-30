@@ -7,7 +7,7 @@ export function isValidTagName(tagName: string): boolean {
 }
 
 // Helper function to compare arrays
-export function arraysEqual(a: any[], b: any[]): boolean {
+export function arraysEqual<T>(a: T[], b: T[]): boolean {
     if (a.length !== b.length) {
         return false;
     }
