@@ -1,6 +1,7 @@
+import { debug } from "console";
 import { arraysEqual } from "./helper";
 import { requestIdleCallback, IdleObject } from "./requestIdleCallback";
-import { add2RenderQueue, schedule } from "./schedule";
+
 
 // fiber node interface
 export type Fiber = {
@@ -97,7 +98,7 @@ function createDom(vdom: Fiber) {
 
 
 // update dom 
-function updateDom(dom: any, prevProps: FiberProps | null, nextProps: FiberProps) {
+function updateDom(dom: any, prevProps: FiberProps | null, nextProps: FiberProps = { children: []}) {
     // Your logic to update DOM attributes, event listeners, etc.
     // Remove old attributes
     const isEvent = (name: string) => name.startsWith("on");
@@ -185,7 +186,9 @@ function commitDeletion(fiber: Fiber | undefined | null, domParent: HTMLElement 
     if (!fiber) return
     if (fiber.dom) {
         // If the fiber has a DOM node, remove it from the parent
-        domParent.removeChild(fiber.dom)
+        if (domParent.contains(fiber.dom)) {
+            domParent.removeChild(fiber.dom);
+        }
     } else {
         // If the fiber doesn't have a DOM node, recursively commit deletion for its children
         commitDeletion(fiber.child, domParent)
@@ -241,7 +244,7 @@ function updateHostComponent(fiber: Fiber) {
     if (!fiber.dom) {
         fiber.dom = createDom(fiber);
     }
-    reconcileChildren(fiber, fiber.props.children || [])
+    reconcileChildren(fiber, fiber.props?.children || [])
 }
 
 

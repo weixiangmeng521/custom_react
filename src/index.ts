@@ -1,12 +1,13 @@
-import { Fiber } from "./internal/fiber";
+import type { Fiber } from "./internal/fiber";
+import { render } from "./internal/fiber";
 import IndexComponent from "@/views/index.tpl";
-import { __render } from "internal/schedule";
 
 
 class Component{
     private _container = document.getElementById("app");
-    public tree:Fiber = IndexComponent.render.bind(this)();
     public name = "...";
+    public items = ["beijing", "hongkong", "tokyo"];    
+    public tree:Fiber = IndexComponent.render.bind(this)();
 
     constructor(){
         this.rainBowRun();
@@ -21,10 +22,12 @@ class Component{
     async rainBowRun(){
         await this.sleep(1000);
         this.name = "hello";
+        this.items = ["beijing", "hongkong", "tokyo"];    
         this.update();
 
         await this.sleep(200);
         this.name = "world";
+        this.items = ["beijing", "hongkong", "tokyo", "London"];    
         this.update();   
         this.rainBowRun();
     }
@@ -33,14 +36,14 @@ class Component{
     update(){
         const newTree = IndexComponent.render.bind(this)();
 
-        __render(newTree, this._container);
+        render(newTree, this._container);
 
         // this._tree = newTree;
     }
 
 
     render(){
-        __render(this.tree, this._container);
+        render(this.tree, this._container);
 
     }
 }

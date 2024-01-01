@@ -1,11 +1,9 @@
 import path from 'path';
 import typescript from '@rollup/plugin-typescript';
-import babel from '@rollup/plugin-babel'
 import nodeResolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import { eslint } from 'rollup-plugin-eslint'
-import { DEFAULT_EXTENSIONS } from '@babel/core'
-import compilerImportPlugin from './compiler/import_plugin.mjs';
+import VDomCompiler from './compiler/import_plugin.mjs';
 import json from '@rollup/plugin-json';
 import alias from '@rollup/plugin-alias';
 import { dirname } from 'path';
@@ -65,7 +63,12 @@ const rollupConfig = {
   // external: ['lodash'], // 指出应将哪些模块视为外部模块，如 Peer dependencies 中的依赖
   // plugins 需要注意引用顺序
   plugins: [
-    compilerImportPlugin(),    
+    alias({
+      entries: [
+        { find: "@", replacement: path.join(__dirname, '/src') }
+      ]
+    }),
+    VDomCompiler(),    
     // 使得 rollup 支持 commonjs 规范，识别 commonjs 规范的依赖
     commonjs(),    
     // 验证导入的文件
@@ -82,28 +85,10 @@ const rollupConfig = {
         moduleDirectories: ['node_modules'],
       },
     }),
-  
-    alias({
-      entries: [
-        { find: "@", replacement: path.join(__dirname, '/src') }
-      ]
-    }),
-  
     // typescript compile configuration
     typescript(),
   
     json(),
-  
-    // babel({
-    //   babelHelpers: 'runtime',
-    //   // 只转换源代码，不运行外部依赖
-    //   exclude: 'node_modules/**',
-    //   // babel 默认不支持 ts 需要手动添加
-    //   extensions: [
-    //     ...DEFAULT_EXTENSIONS,
-    //     '.ts',
-    //   ],
-    // }),
   ],
 }
 

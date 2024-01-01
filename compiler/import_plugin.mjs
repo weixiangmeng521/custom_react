@@ -1,10 +1,10 @@
 import { createFilter } from '@rollup/pluginutils'
 import fs from 'fs'
-import { toFiberTree, toFiberTreeText } from "./to_tree.mjs"
+import { toFiberTreeText } from "./to_tree.mjs"
 import pluginConfig from "./config.mjs"
 
 
-export default function compilerImportPlugin(options = {}) {
+export default function VDomCompiler(options = {}) {
   // set default
   if(!options || !options.include) {
     options.include = `src/**/*${pluginConfig.extension}`;
@@ -13,7 +13,7 @@ export default function compilerImportPlugin(options = {}) {
   const filter = createFilter(options.include, options.exclude);
 
   return {
-    name: 'compiler-import-plugin',
+    name: 'vdom-compiler',
 
     resolveId(source, importer) {
       // 只处理以 extension 结尾的 import
@@ -37,7 +37,6 @@ export default function compilerImportPlugin(options = {}) {
     },
 
 
-
     load(id) {
       if (filter(id) && id.endsWith(pluginConfig.extension)) {
         // Read the content of the file
@@ -46,10 +45,10 @@ export default function compilerImportPlugin(options = {}) {
 
         const tree = toFiberTreeText(content);
 return `
-import { createElement, createTextElement } from "@/internal/fiber";
-/** @ts-nocheck */
+import { createElement, createTextElement, displayTplStr, displayTplList } from "@/internal";
+/** automatically generate */
 export default {
-  render: function(){ return(${tree}) }
+  render: function(){ return (${tree}) }
 }
 `;
       }

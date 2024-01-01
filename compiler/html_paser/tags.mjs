@@ -82,5 +82,6 @@ export const htmlEscape = {
   '&euro;': '€',
   '&pound;': '£',
   '&yen;': '¥',
+  '&nbsp;': ' ',
   // Add more escape characters as needed
 };

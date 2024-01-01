@@ -16,12 +16,22 @@
                 <form id="form">
                     <label>Input (HTML):</label><br />
                     <textarea cols="60" rows="10" id="input" style="width: 100%;"></textarea><br />
-                    <input type="submit" value="Run" class="btn btn-primary" onClick="alert('12312')" />
+                    <input type="submit" value="Run" class="btn btn-primary" onClick="(e) => {
+                        e.preventDefault();
+                        console.log(e);
+                    }" />
                 </form>
                 <br />
                 <label>Output (XML):</label><br />
                 <textarea cols="60" rows="10" id="output" style="width: 100%;"></textarea>
             </div>
+        </div>
+        <div>
+            <ol>
+                <li for="(item, index) in this.items">
+                    <i>{{ index }}</i>&nbsp;&nbsp;&nbsp;{{ item }}
+                </li>
+            </ol>
         </div>
         <div class="span7">
             <div style="padding: 10px">
