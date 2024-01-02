@@ -17,9 +17,9 @@ export class EventQueue<T>{
 
 
     public schedule(callback:((arg:T) => void)){
-        const param = this._dequeue();
-        if(!param)return;
-        callback(param);
+        const element = this._dequeue();
+        if(!element)return;
+        callback(element);
         // recursive
         setTimeout(() => this.schedule(callback), 0);
     }

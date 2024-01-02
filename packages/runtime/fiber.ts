@@ -105,7 +105,7 @@ function updateDom(dom: any, prevProps: FiberProps | null, nextProps: FiberProps
     const isAttribute = (name: string) => !isEvent(name) && name != "children";
     
     // Add new attributes
-    Object.keys(nextProps).forEach((name: string) => {
+    Object.keys(nextProps).filter(isAttribute).forEach((name: string) => {
         if(!isSameProps(prevProps ?? { children: [] }, nextProps)){
             // exclude children
             if(name !== "children") {
@@ -121,14 +121,19 @@ function updateDom(dom: any, prevProps: FiberProps | null, nextProps: FiberProps
         // exclude Fiber, Fiber[], string[]
         if(Array.isArray(nextProps[name]) || typeof nextProps[name] === "object" ) return;
         
-        const oldHandlerStr = (prevProps ?? { children: [] })[name] as string;
-        // remove old handler, add new handler.
+        const oldHandlerStr = (nextProps ?? { children: [] })[name] as string;
+
+        // update, remove old handler, add new handler.
+        const oldHandler = new Function(oldHandlerStr) as EventListenerOrEventListenerObject;
+        const newHandler = new Function(nextProps[name] as string) as EventListenerOrEventListenerObject;        
         if(oldHandlerStr !== nextProps[name]) {
-            const oldHandler = new Function(oldHandlerStr) as EventListenerOrEventListenerObject;
-            const newHandler = new Function(nextProps[name] as string) as EventListenerOrEventListenerObject;
             dom.removeEventListener(eventType, oldHandler);
             dom.addEventListener(eventType, newHandler);
+            return;
         }
+        // bind event
+        dom.addEventListener(eventType, newHandler);
+        debugger;
     })
 }
 

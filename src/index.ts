@@ -1,16 +1,17 @@
-import type { Fiber } from "./internal/fiber";
-import { render } from "./internal/fiber";
+import type { Fiber } from "../packages/runtime/fiber";
+import { render } from "../packages/runtime/fiber";
 import IndexComponent from "@/views/index.tpl";
 
 
 class Component{
     private _container = document.getElementById("app");
     public name = "...";
-    public items = ["beijing", "hongkong", "tokyo"];    
+    public items = ["beijing", "hongkong", "tokyo"];
+    public counter = 0;
     public tree:Fiber = IndexComponent.render.bind(this)();
 
     constructor(){
-        this.rainBowRun();
+        // this.rainBowRun();
 
     }
 
@@ -28,8 +29,21 @@ class Component{
         await this.sleep(200);
         this.name = "world";
         this.items = ["beijing", "hongkong", "tokyo", "London"];    
-        this.update();   
+        this.update();
         this.rainBowRun();
+    }
+
+
+    increase(){
+        this.counter++;
+        this.update();
+        debugger
+    }
+
+    decrease(){
+        this.counter--;
+        this.update();
+        debugger
     }
 
 

@@ -4,7 +4,7 @@ import { toFiberTreeText } from "./to_tree.mjs"
 import pluginConfig from "./config.mjs"
 
 
-export default function VDomCompiler(options = {}) {
+export function VDomCompiler(options = {}) {
   // set default
   if(!options || !options.include) {
     options.include = `src/**/*${pluginConfig.extension}`;
@@ -45,7 +45,7 @@ export default function VDomCompiler(options = {}) {
 
         const tree = toFiberTreeText(content);
 return `
-import { createElement, createTextElement, displayTplStr, displayTplList } from "@/internal";
+import { createElement, createTextElement, displayTplStr, displayTplList } from "@packages/runtime";
 /** automatically generate */
 export default {
   render: function(){ return (${tree}) }

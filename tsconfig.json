@@ -25,6 +25,6 @@
     },
     "include": [
       "src/*",  // 导入目录
-      "**/*.ts",
+      "**/*.ts", "packages/runtime",
     ]
 }

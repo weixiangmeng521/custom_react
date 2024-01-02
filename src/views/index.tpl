@@ -27,6 +27,11 @@
             </div>
         </div>
         <div>
+            <button onClick="this.increase">Increase</button>
+            <p>{{ this.counter }}</p>
+            <button onClick="this.decrease">Decrease</button>
+        </div>
+        <div>
             <ol>
                 <li for="(item, index) in this.items">
                     <i>{{ index }}</i>&nbsp;&nbsp;&nbsp;{{ item }}

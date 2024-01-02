@@ -3,7 +3,7 @@ import typescript from '@rollup/plugin-typescript';
 import nodeResolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import { eslint } from 'rollup-plugin-eslint'
-import VDomCompiler from './compiler/import_plugin.mjs';
+import { VDomCompiler } from './packages/compiler/index.mjs';
 import json from '@rollup/plugin-json';
 import alias from '@rollup/plugin-alias';
 import { dirname } from 'path';
@@ -65,7 +65,8 @@ const rollupConfig = {
   plugins: [
     alias({
       entries: [
-        { find: "@", replacement: path.join(__dirname, '/src') }
+        { find: "@", replacement: path.join(__dirname, '/src') },
+        { find: "@packages", replacement: path.join(__dirname, '/packages') },
       ]
     }),
     VDomCompiler(),    
