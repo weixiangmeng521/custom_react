@@ -1,6 +1,6 @@
 import { createFilter } from '@rollup/pluginutils'
 import fs from 'fs'
-import { toFiberTreeText } from "./to_tree.mjs"
+import { toFiberTreeText } from "./nodeTree.mjs"
 import pluginConfig from "./config.mjs"
 
 

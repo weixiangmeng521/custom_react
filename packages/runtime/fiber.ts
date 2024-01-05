@@ -18,7 +18,7 @@ export type Fiber = {
     props: FiberProps,
     partialState?: Fiber | null,
     // Effect 相关的
-    effectTag?: string,
+    effectTag?: EffectTag,
     hooks?: [],
     dom?: Text | HTMLElement | null,
 }
@@ -33,7 +33,16 @@ export type FiberProps = {
 }
 
 
-export type EffectTag = "PLACEMENT" | "UPDATE" | "DELETION";
+// effect name
+export type PLACEMENT = 0b000001;
+export type UPDATE    = 0b000010;
+export type DELETION  = 0b000100;
+// value
+export const PLACEMENT: PLACEMENT = 0b00001;
+export const UPDATE: UPDATE = 0b00010;
+export const DELETION: DELETION = 0b00100;
+// union type
+export type EffectTag = PLACEMENT | UPDATE | DELETION;
 
 
 
@@ -98,17 +107,17 @@ function createDom(vdom: Fiber) {
 
 
 // update dom 
-function updateDom(dom: any, prevProps: FiberProps | null, nextProps: FiberProps = { children: []}) {
+function updateDom(dom: any, prevProps: FiberProps | null, nextProps: FiberProps = { children: [] }) {
     // Your logic to update DOM attributes, event listeners, etc.
     // Remove old attributes
     const isEvent = (name: string) => name.startsWith("on");
-    const isAttribute = (name: string) => !isEvent(name) && name != "children";
-    
+    const isAttribute = (name: string) => !isEvent(name) && name !== "children";
+
     // Add new attributes
     Object.keys(nextProps).filter(isAttribute).forEach((name: string) => {
-        if(!isSameProps(prevProps ?? { children: [] }, nextProps)){
+        if (!isSameProps(prevProps ?? { children: [] }, nextProps)) {
             // exclude children
-            if(name !== "children") {
+            if (name !== "children") {
                 dom[name] = nextProps[name];
             }
         }
@@ -119,21 +128,25 @@ function updateDom(dom: any, prevProps: FiberProps | null, nextProps: FiberProps
     Object.keys(nextProps).filter(isEvent).forEach(name => {
         const eventType = name.toLowerCase().substring(2);
         // exclude Fiber, Fiber[], string[]
-        if(Array.isArray(nextProps[name]) || typeof nextProps[name] === "object" ) return;
-        
+        if (Array.isArray(nextProps[name]) || typeof nextProps[name] === "object") return;
+
         const oldHandlerStr = (nextProps ?? { children: [] })[name] as string;
 
         // update, remove old handler, add new handler.
         const oldHandler = new Function(oldHandlerStr) as EventListenerOrEventListenerObject;
-        const newHandler = new Function(nextProps[name] as string) as EventListenerOrEventListenerObject;        
-        if(oldHandlerStr !== nextProps[name]) {
+        const newHandler = new Function(nextProps[name] as string) as EventListenerOrEventListenerObject;
+       
+        debugger;
+
+        // is not same
+        if (oldHandlerStr !== nextProps[name]) {
             dom.removeEventListener(eventType, oldHandler);
             dom.addEventListener(eventType, newHandler);
             return;
         }
         // bind event
         dom.addEventListener(eventType, newHandler);
-        debugger;
+        // debugger;
     })
 }
 
@@ -159,13 +172,13 @@ function commitWork(fiber: Fiber | null | undefined) {
     }
     const domParent = domParentFiber?.dom
 
-    if (domParent && fiber.effectTag === "PLACEMENT" && fiber.dom) {
+    if (domParent && fiber.effectTag === PLACEMENT && fiber.dom) {
         // If the fiber has the PLACEMENT effect, append the DOM node to its parent
         domParent.appendChild(fiber.dom)
 
     } else if (
         // If the fiber has the UPDATE effect, update the DOM node with new props
-        domParent && fiber.effectTag === "UPDATE" && fiber.dom
+        domParent && fiber.effectTag === UPDATE && fiber.dom
     ) {
         updateDom(
             fiber.dom,
@@ -174,7 +187,7 @@ function commitWork(fiber: Fiber | null | undefined) {
         );
 
         // If the fiber has the DELETION effect, remove the DOM node from its parent    
-    } else if (domParent && fiber.effectTag === "DELECTION") {
+    } else if (domParent && fiber.effectTag === DELETION) {
         commitDeletion(fiber, domParent);
     }
 
@@ -263,7 +276,7 @@ function isSameProps(oldProps: FiberProps, newProps: FiberProps): boolean {
     for (const key in allProps) {
         const oldPropValue: PropsType = oldProps[key];
         const newPropValue: PropsType = newProps[key];
-        
+
         if (
             (Array.isArray(oldPropValue) || oldPropValue instanceof Object) &&
             (Array.isArray(newPropValue) || newPropValue instanceof Object)
@@ -274,7 +287,7 @@ function isSameProps(oldProps: FiberProps, newProps: FiberProps): boolean {
             continue;
         } else if (Array.isArray(oldPropValue) && Array.isArray(newPropValue)) {
             // If both values are string[], then compare
-            if (!arraysEqual< string | string[] | Fiber[] | Fiber>(oldPropValue, newPropValue)) {
+            if (!arraysEqual<string | string[] | Fiber[] | Fiber>(oldPropValue, newPropValue)) {
                 return false;
             }
         } else if (typeof oldPropValue === 'string' && typeof newPropValue === 'string') {
@@ -315,11 +328,11 @@ function reconcileChildren(wipFiber: Fiber, elements: Fiber[]) {
                 props: element.props,
                 dom: oldFiber?.dom,
                 parent: wipFiber,
-                alternate: {...(oldFiber ?? { props: { children: []} })},
-                effectTag: "UPDATE",
+                alternate: { ...(oldFiber ?? { props: { children: [] } }) },
+                effectTag: UPDATE,
             }
         }
-        
+
         if (!sameType && element) {
             // Create a new fiber for a new element
             newFiber = {
@@ -328,15 +341,15 @@ function reconcileChildren(wipFiber: Fiber, elements: Fiber[]) {
                 dom: createDom({ type: element.type, props: element.props }),
                 parent: wipFiber,
                 alternate: null,
-                effectTag: "PLACEMENT",
+                effectTag: PLACEMENT,
             }
         }
         // Mark the old fiber for deletion
         if (!sameType && oldFiber) {
-            oldFiber.effectTag = "DELECTION";
+            oldFiber.effectTag = DELETION;
             deletions.push(oldFiber);
         }
-        
+
         if (oldFiber) {
             oldFiber = oldFiber.sibling
         }
@@ -347,7 +360,7 @@ function reconcileChildren(wipFiber: Fiber, elements: Fiber[]) {
             // Set the sibling of the previous fiber
             prevSibling.sibling = newFiber
         }
-        
+
         prevSibling = newFiber
         index++
 

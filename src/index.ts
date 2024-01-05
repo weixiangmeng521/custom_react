@@ -11,7 +11,7 @@ class Component{
     public tree:Fiber = IndexComponent.render.bind(this)();
 
     constructor(){
-        // this.rainBowRun();
+        this.rainBowRun();
 
     }
 

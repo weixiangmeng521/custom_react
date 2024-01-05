@@ -1,13 +1,18 @@
 declare module '*.tpl' {
     export interface FiberProps {
-        [key:string]:string | string[] | Fiber[] | Fiber | EventListenerOrEventListenerObject,
+        [key: string]: string | string[] | Fiber[] | Fiber | EventListenerOrEventListenerObject,
         children: Fiber[],
     }
-    
+
+    export type PLACEMENT = 0b00001;
+    export type UPDATE = 0b00010;
+    export type DELETION = 0b00100;
+    export type EffectTag = PLACEMENT | UPDATE | DELETION;
+
     // fiber node interface
-    export interface Fiber{
+    export interface Fiber {
         tag?: string,
-        type?: string | ((props:FiberProps) => Fiber),
+        type?: string | ((props: FiberProps) => Fiber),
         // 单链表树结构
         parent?: Fiber,
         child?: Fiber | null,
@@ -19,10 +24,10 @@ declare module '*.tpl' {
         props: FiberProps,
         partialState?: Fiber | null,
         // Effect 相关的
-        effectTag?: string,
+        effectTag?: EffectTag,
         hooks?: [],
         dom?: Text | HTMLElement | null,
     }
 
-    export function render():Fiber;
+    export function render(): Fiber;
 }
