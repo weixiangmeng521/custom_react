@@ -26,12 +26,14 @@
     "@typescript-eslint/parser": "^6.15.0",
     "consola": "^3.2.3",
     "eslint": "^8.56.0",
-    "rollup": "^4.9.1",
     "rollup-plugin-eslint": "^7.0.0",
     "rollup-plugin-livereload": "^2.0.5",
     "rollup-plugin-minification": "^0.2.0",
     "rollup-plugin-serve": "^1.1.0",
     "tslib": "^2.1.0",
     "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "rollup": "^4.62.2"
   }
 }
