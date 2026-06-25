@@ -10,12 +10,8 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import fs from "fs";
 
-
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
-
 
 const config = {
   input: path.join(__dirname, '/src/index.ts'),
@@ -27,10 +23,6 @@ const config = {
   bundleName: 'bundle.js',
 }
 
-
-
-
-
 // 构建public目录下面的资源
 export const buildPublic = () => {
   let html = fs.readFileSync(config.html, { encoding: 'utf-8' }).toString();
@@ -39,12 +31,6 @@ export const buildPublic = () => {
   fs.mkdir(config.output, { recursive: true }, (err) => { if (err) throw err; });
   fs.writeFileSync(path.join(config.output, 'index.html'), html);
 }
-
-
-
-
-
-
 
 // rollup 配置项
 const rollupConfig = {

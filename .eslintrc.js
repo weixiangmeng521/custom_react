@@ -20,6 +20,6 @@ module.exports = {
         // 'indent': ['warning', 2],
         // 'no-unused-vars': 'error',
         'no-restricted-globals': ['error', ...NodeGlobals],
-        'no-console': 'off',
+        // 'no-console': 'off',
     }
 };
