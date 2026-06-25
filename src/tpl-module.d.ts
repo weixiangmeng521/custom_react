@@ -29,5 +29,5 @@ declare module '*.tpl' {
         dom?: Text | HTMLElement | null,
     }
 
-    export function render(): Fiber;
+    export function render(_t:any): Fiber;
 }

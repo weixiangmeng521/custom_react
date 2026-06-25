@@ -1,5 +1,5 @@
 import { debug } from "console";
-import { arraysEqual } from "./helper";
+import { arraysEqual, isFunStr } from "./helper";
 import { requestIdleCallback, IdleObject } from "./requestIdleCallback";
 
 
@@ -106,6 +106,15 @@ function createDom(vdom: Fiber) {
 }
 
 
+// generate function by string
+function generateFuncByStr(functionStr:string):Function{
+    const isFun = isFunStr(functionStr);
+    if(isFun) return new Function(functionStr);
+    return new Function(`() => ${functionStr};)`);
+}
+
+
+
 // update dom 
 function updateDom(dom: any, prevProps: FiberProps | null, nextProps: FiberProps = { children: [] }) {
     // Your logic to update DOM attributes, event listeners, etc.
@@ -131,20 +140,24 @@ function updateDom(dom: any, prevProps: FiberProps | null, nextProps: FiberProps
         if (Array.isArray(nextProps[name]) || typeof nextProps[name] === "object") return;
 
         const oldHandlerStr = (nextProps ?? { children: [] })[name] as string;
+        const newHandlerStr = nextProps[name] as string;
 
         // update, remove old handler, add new handler.
         const oldHandler = new Function(oldHandlerStr) as EventListenerOrEventListenerObject;
-        const newHandler = new Function(nextProps[name] as string) as EventListenerOrEventListenerObject;
+        const newHandler = new Function(newHandlerStr) as EventListenerOrEventListenerObject;
        
-        debugger;
+        // debugger;
 
-        // is not same
-        if (oldHandlerStr !== nextProps[name]) {
+        
+        // // is not same
+        if (oldHandlerStr !== newHandlerStr) {
             dom.removeEventListener(eventType, oldHandler);
             dom.addEventListener(eventType, newHandler);
             return;
         }
+
         // bind event
+        dom.removeEventListener(eventType, newHandler);
         dom.addEventListener(eventType, newHandler);
         // debugger;
     })

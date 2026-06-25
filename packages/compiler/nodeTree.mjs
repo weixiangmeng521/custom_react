@@ -2,11 +2,19 @@ import { parse } from "./html_paser/index.mjs"
 import { unescapedString } from "./html_paser/escape.mjs"
 import { consola } from "consola";
 
+
+// convert this => _t
+function _convertArgOne(s){
+    return s.replace(/this.\b/g, '_t.');
+}
+
+
 // parse template string syntax
 function parseTemplateSyntax(template) {
     // 正则表达式匹配{{变量名}}
     const regex = /\{\{([^}]+)\}\}/g;
-    const result = template.replace(regex, (_, variable) => "${" + variable + "}");
+    // this -> _t
+    const result = template.replace(regex, (_, variable) => "${" + _convertArgOne(variable) + "}");
     return result;
 }
 
@@ -34,7 +42,7 @@ export const toFiberTreeText = (html) => {
         attrs.forEach((item) => {
             const key = item.key;
             const value = item.value;
-            obj[key] = value;
+            obj[key] = _convertArgOne(value);
         });
         return obj;
     };
@@ -71,7 +79,7 @@ export const toFiberTreeText = (html) => {
             return;
         }
         const [_, item, index] = match;
-        const items = (syntax.split(" in ")[1] || "").trim();
+        const items = _convertArgOne((syntax.split(" in ")[1] || "").trim());
 
         // remove attribute "for" and copy
         const attrList = childNode["attributes"] || [];

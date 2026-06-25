@@ -36,3 +36,16 @@ export function objectsEqual(a: Record<string, any>, b: Record<string, any>): bo
 
     return true;
 }
+
+
+export function isFunStr(str: string): boolean {
+    // 使用正则表达式判断字符串是否符合箭头函数的语法
+    const arrowFunctionRegex = /^(\([\s\S]*\)|[\w\d]+)\s*=>\s*[\s\S]*$/;
+    // 使用正则表达式判断字符串是否符合普通函数声明的语法
+    const functionRegex = /^function\s*\([\s\S]*\)\s*\{[\s\S]*\}$/;
+
+    // 使用正则表达式进行匹配
+    if(arrowFunctionRegex.test(str)) return true;
+    if(functionRegex.test(str)) return true;
+    return false;
+}

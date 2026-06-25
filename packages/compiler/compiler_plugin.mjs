@@ -48,7 +48,7 @@ return `
 import { createElement, createTextElement, displayTplStr, displayTplList } from "@packages/runtime";
 /** automatically generate */
 export default {
-  render: function(){ return (${tree}) }
+  render(_t){ return (${tree}) }
 }
 `;
       }

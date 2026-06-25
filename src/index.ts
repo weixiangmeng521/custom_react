@@ -8,10 +8,10 @@ class Component{
     public name = "...";
     public items = ["beijing", "hongkong", "tokyo"];
     public counter = 0;
-    public tree:Fiber = IndexComponent.render.bind(this)();
+    public tree:Fiber = IndexComponent.render(this);
 
     constructor(){
-        this.rainBowRun();
+        // this.rainBowRun();
 
     }
 
@@ -48,7 +48,7 @@ class Component{
 
 
     update(){
-        const newTree = IndexComponent.render.bind(this)();
+        const newTree = IndexComponent.render(this);
 
         render(newTree, this._container);
 
